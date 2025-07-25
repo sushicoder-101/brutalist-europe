@@ -75,6 +75,9 @@ function switchView(viewName) {
         case 'timeline':
             renderTimelineView();
             break;
+        case 'essay':
+            renderEssayView();
+            break;
     }
 }
 
@@ -251,7 +254,17 @@ function renderCurrentView() {
         case 'timeline':
             renderTimelineView();
             break;
+        case 'essay':
+            renderEssayView();
+            break;
     }
+}
+
+// Essay view rendering
+function renderEssayView() {
+    // Essay content is static HTML, no dynamic rendering needed
+    // Apply fade-in animations to essay sections
+    refreshAnimations();
 }
 
 // Image error handling
@@ -411,6 +424,9 @@ document.addEventListener('keydown', (e) => {
         case '3':
             switchView('timeline');
             break;
+        case '4':
+            switchView('essay');
+            break;
         case '/':
             e.preventDefault();
             searchInput.focus();
@@ -439,7 +455,7 @@ function handleSwipe() {
     
     if (modal.classList.contains('active')) return;
     
-    const views = ['grid', 'map', 'timeline'];
+    const views = ['grid', 'map', 'timeline', 'essay'];
     const currentIndex = views.indexOf(currentView);
     
     if (diff > 0 && currentIndex < views.length - 1) {

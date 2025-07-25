@@ -314,6 +314,78 @@ h1, h2, h3, h4, h5, h6 {
     font-weight: 600;
 }
 
+/* Essay View */
+.essay-view {
+    padding: 2rem 0;
+}
+
+.essay-container {
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.essay-content {
+    background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+    border: 4px solid #444;
+    padding: 3rem;
+    line-height: 1.7;
+}
+
+.essay-title {
+    font-size: clamp(2rem, 5vw, 3rem);
+    font-weight: 900;
+    color: #fff;
+    text-align: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 4px solid #555;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.essay-section {
+    margin-bottom: 2.5rem;
+}
+
+.essay-section:last-child {
+    margin-bottom: 0;
+}
+
+.essay-section h2 {
+    font-size: 1.8rem;
+    font-weight: 900;
+    color: #fff;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-left: 6px solid #666;
+    padding-left: 1rem;
+}
+
+.essay-intro {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: #ddd;
+    margin-bottom: 1.5rem;
+    padding: 1.5rem;
+    background-color: #333;
+    border: 2px solid #555;
+    border-left: 6px solid #777;
+    font-style: italic;
+}
+
+.essay-section p {
+    font-size: 1.1rem;
+    color: #ccc;
+    margin-bottom: 1.5rem;
+    font-family: 'Arial', sans-serif;
+    font-weight: 400;
+}
+
+.essay-section p:last-child {
+    margin-bottom: 0;
+}
+
 /* Modal */
 .modal {
     display: none;
@@ -486,6 +558,27 @@ h1, h2, h3, h4, h5, h6 {
         font-size: 2rem;
     }
     
+    .essay-content {
+        padding: 2rem;
+    }
+    
+    .essay-title {
+        font-size: 2rem;
+    }
+    
+    .essay-section h2 {
+        font-size: 1.5rem;
+    }
+    
+    .essay-intro {
+        font-size: 1.1rem;
+        padding: 1rem;
+    }
+    
+    .essay-section p {
+        font-size: 1rem;
+    }
+    
     .modal-content {
         width: 95%;
         max-height: 85%;
@@ -516,6 +609,23 @@ h1, h2, h3, h4, h5, h6 {
     
     .building-card {
         margin: 0 0.5rem;
+    }
+    
+    .essay-content {
+        padding: 1.5rem;
+    }
+    
+    .essay-title {
+        font-size: 1.8rem;
+    }
+    
+    .essay-section h2 {
+        font-size: 1.3rem;
+    }
+    
+    .essay-intro {
+        font-size: 1rem;
+        padding: 1rem;
     }
 }
 
