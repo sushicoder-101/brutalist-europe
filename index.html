@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brutalist Europe - Interactive Architecture Showcase</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="header">
+        <div class="container">
+            <h1 class="title">BRUTALIST EUROPE</h1>
+            <p class="subtitle">Ten Influential Buildings That Shaped a Movement</p>
+        </div>
+    </header>
+
+    <nav class="navigation">
+        <div class="container">
+            <div class="nav-buttons">
+                <button class="nav-btn active" data-view="grid">GRID</button>
+                <button class="nav-btn" data-view="map">MAP</button>
+                <button class="nav-btn" data-view="timeline">TIMELINE</button>
+            </div>
+            <div class="search-container">
+                <input type="text" class="search-input" placeholder="Search buildings...">
+                <select class="filter-select">
+                    <option value="">All Countries</option>
+                    <option value="UK">United Kingdom</option>
+                    <option value="France">France</option>
+                    <option value="Germany">Germany</option>
+                    <option value="Croatia">Croatia</option>
+                </select>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main">
+        <div class="container">
+            <!-- Grid View -->
+            <section class="view grid-view active" id="gridView">
+                <div class="buildings-grid" id="buildingsGrid">
+                    <!-- Buildings will be dynamically inserted here -->
+                </div>
+            </section>
+
+            <!-- Map View -->
+            <section class="view map-view" id="mapView">
+                <div class="map-container">
+                    <div id="map"></div>
+                </div>
+            </section>
+
+            <!-- Timeline View -->
+            <section class="view timeline-view" id="timelineView">
+                <div class="timeline-container" id="timelineContainer">
+                    <!-- Timeline will be dynamically inserted here -->
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Modal for building details -->
+    <div class="modal" id="buildingModal">
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose">&times;</button>
+            <div class="modal-body" id="modalBody">
+                <!-- Modal content will be dynamically inserted here -->
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script src="data.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

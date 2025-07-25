@@ -1,0 +1,548 @@
+/* Reset and base styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial Black', 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.4;
+    background-color: #2a2a2a;
+    color: #f5f5f5;
+    overflow-x: hidden;
+}
+
+/* Typography - Brutalist inspired */
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.title {
+    font-size: clamp(2rem, 8vw, 4rem);
+    font-weight: 900;
+    letter-spacing: 0.1em;
+    color: #ffffff;
+    text-shadow: 3px 3px 0px #666;
+}
+
+.subtitle {
+    font-size: clamp(0.9rem, 2vw, 1.2rem);
+    font-weight: 400;
+    color: #cccccc;
+    margin-top: 0.5rem;
+}
+
+/* Container and layout */
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* Header */
+.header {
+    background: linear-gradient(135deg, #1a1a1a 0%, #333333 100%);
+    padding: 3rem 0;
+    text-align: center;
+    border-bottom: 4px solid #666;
+}
+
+/* Navigation */
+.navigation {
+    background-color: #1a1a1a;
+    padding: 1.5rem 0;
+    border-bottom: 2px solid #444;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.navigation .container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+
+.nav-buttons {
+    display: flex;
+    gap: 0;
+}
+
+.nav-btn {
+    background-color: #333;
+    color: #fff;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border-right: 1px solid #555;
+}
+
+.nav-btn:first-child {
+    border-left: 1px solid #555;
+}
+
+.nav-btn:hover {
+    background-color: #555;
+    transform: translateY(-1px);
+}
+
+.nav-btn.active {
+    background-color: #666;
+    color: #fff;
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.search-container {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.search-input, .filter-select {
+    padding: 0.75rem;
+    border: 2px solid #555;
+    background-color: #2a2a2a;
+    color: #fff;
+    font-family: inherit;
+    font-size: 0.9rem;
+}
+
+.search-input {
+    width: 200px;
+}
+
+.search-input:focus, .filter-select:focus {
+    outline: none;
+    border-color: #777;
+}
+
+/* Main content */
+.main {
+    min-height: 70vh;
+    padding: 2rem 0;
+}
+
+/* View switching */
+.view {
+    display: none;
+}
+
+.view.active {
+    display: block;
+}
+
+/* Grid View */
+.buildings-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 2rem;
+    padding: 1rem 0;
+}
+
+.building-card {
+    background: linear-gradient(135deg, #333 0%, #2a2a2a 100%);
+    border: 3px solid #444;
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    position: relative;
+}
+
+.building-card:hover {
+    transform: translateY(-5px);
+    border-color: #666;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+
+.image-container {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    background-color: #444;
+    overflow: hidden;
+}
+
+.building-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: grayscale(30%) contrast(1.1);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.image-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #999;
+    font-size: 0.9rem;
+    font-weight: 600;
+}
+
+.building-info {
+    padding: 1.5rem;
+}
+
+.building-name {
+    font-size: 1.4rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    color: #fff;
+}
+
+.building-meta {
+    color: #bbb;
+    font-size: 0.9rem;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.building-description {
+    color: #ddd;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+}
+
+.building-year {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background-color: #666;
+    color: #fff;
+    padding: 0.5rem 1rem;
+    font-weight: 900;
+    font-size: 1.1rem;
+    border: 2px solid #888;
+}
+
+/* Map View */
+.map-view {
+    padding: 1rem 0;
+}
+
+.map-container {
+    height: 70vh;
+    border: 3px solid #444;
+    background-color: #333;
+}
+
+#map {
+    height: 100%;
+    width: 100%;
+    filter: grayscale(20%) contrast(1.1);
+}
+
+/* Timeline View */
+.timeline-view {
+    padding: 2rem 0;
+}
+
+.timeline-container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.decade-section {
+    margin-bottom: 3rem;
+}
+
+.decade-title {
+    font-size: 2rem;
+    font-weight: 900;
+    color: #fff;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    background-color: #333;
+    padding: 1rem;
+    border: 3px solid #555;
+}
+
+.timeline-buildings {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.timeline-building {
+    display: grid;
+    grid-template-columns: 1fr 3fr;
+    gap: 2rem;
+    background: linear-gradient(135deg, #333 0%, #2a2a2a 100%);
+    border: 2px solid #444;
+    padding: 1.5rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.timeline-building:hover {
+    border-color: #666;
+    transform: translateX(10px);
+}
+
+.timeline-year {
+    font-size: 3rem;
+    font-weight: 900;
+    color: #666;
+    text-align: center;
+    align-self: center;
+}
+
+.timeline-info h3 {
+    font-size: 1.3rem;
+    margin-bottom: 0.5rem;
+    color: #fff;
+}
+
+.timeline-meta {
+    color: #bbb;
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+/* Modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0,0,0,0.8);
+    backdrop-filter: blur(5px);
+}
+
+.modal.active {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-content {
+    background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+    border: 4px solid #555;
+    max-width: 90%;
+    max-height: 90%;
+    width: 800px;
+    overflow-y: auto;
+    position: relative;
+    animation: slideIn 0.3s ease;
+}
+
+.modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background: #666;
+    color: #fff;
+    border: none;
+    width: 40px;
+    height: 40px;
+    font-size: 1.5rem;
+    cursor: pointer;
+    font-weight: 900;
+    z-index: 1001;
+}
+
+.modal-close:hover {
+    background: #888;
+}
+
+.modal-body {
+    padding: 2rem;
+}
+
+.modal-image-container {
+    position: relative;
+    width: 100%;
+    height: 300px;
+    background-color: #444;
+    margin-bottom: 2rem;
+    overflow: hidden;
+}
+
+.modal-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: grayscale(20%) contrast(1.1);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.modal-image-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #999;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.modal-title {
+    font-size: 2.5rem;
+    font-weight: 900;
+    margin-bottom: 1rem;
+    color: #fff;
+}
+
+.modal-meta {
+    font-size: 1.1rem;
+    color: #bbb;
+    margin-bottom: 2rem;
+    font-weight: 600;
+}
+
+.modal-section {
+    margin-bottom: 2rem;
+}
+
+.modal-section h3 {
+    font-size: 1.3rem;
+    color: #fff;
+    margin-bottom: 1rem;
+    border-bottom: 2px solid #444;
+    padding-bottom: 0.5rem;
+}
+
+.modal-features {
+    list-style: none;
+}
+
+.modal-features li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #333;
+    color: #ddd;
+}
+
+.modal-features li:before {
+    content: "▪ ";
+    color: #666;
+    font-weight: bold;
+    margin-right: 0.5rem;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@keyframes slideIn {
+    from { 
+        transform: translateY(-50px);
+        opacity: 0;
+    }
+    to { 
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .navigation .container {
+        flex-direction: column;
+        gap: 1rem;
+    }
+    
+    .search-container {
+        width: 100%;
+    }
+    
+    .search-input {
+        flex: 1;
+        min-width: 0;
+    }
+    
+    .buildings-grid {
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+    }
+    
+    .timeline-building {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+    
+    .timeline-year {
+        font-size: 2rem;
+    }
+    
+    .modal-content {
+        width: 95%;
+        max-height: 85%;
+    }
+    
+    .modal-body {
+        padding: 1.5rem;
+    }
+    
+    .modal-title {
+        font-size: 2rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .nav-btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.8rem;
+    }
+    
+    .title {
+        font-size: 2rem;
+    }
+    
+    .subtitle {
+        font-size: 0.9rem;
+    }
+    
+    .building-card {
+        margin: 0 0.5rem;
+    }
+}
+
+/* Loading states and transitions */
+.loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #1a1a1a;
+}
+
+::-webkit-scrollbar-thumb {
+    background: #555;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: #777;
+}
