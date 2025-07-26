@@ -8,7 +8,7 @@ Brutalist Europe is a single-page web application that celebrates the bold archi
 
 ## 🌐 Live Demo
 
-[View Live Site](https://mattdaily.github.io/brutalist-europe/)
+[View Live Site](https://sushicoder-101.github.io/brutalist-europe/)
 
 ## ✨ Features
 

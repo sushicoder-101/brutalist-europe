@@ -76,7 +76,10 @@ function switchView(viewName) {
             renderTimelineView();
             break;
         case 'essay':
-            renderEssayView();
+            renderLegacyView();
+            break;
+        case 'social-impact':
+            renderSocialImpactView();
             break;
     }
 }
@@ -255,15 +258,25 @@ function renderCurrentView() {
             renderTimelineView();
             break;
         case 'essay':
-            renderEssayView();
+            renderLegacyView();
+            break;
+        case 'social-impact':
+            renderSocialImpactView();
             break;
     }
 }
 
-// Essay view rendering
-function renderEssayView() {
-    // Essay content is static HTML, no dynamic rendering needed
-    // Apply fade-in animations to essay sections
+// Legacy view rendering
+function renderLegacyView() {
+    // Legacy content is static HTML, no dynamic rendering needed
+    // Apply fade-in animations to legacy sections
+    refreshAnimations();
+}
+
+// Social Impact view rendering
+function renderSocialImpactView() {
+    // Social Impact content is static HTML, no dynamic rendering needed
+    // Apply fade-in animations to social impact sections
     refreshAnimations();
 }
 
@@ -427,6 +440,9 @@ document.addEventListener('keydown', (e) => {
         case '4':
             switchView('essay');
             break;
+        case '5':
+            switchView('social-impact');
+            break;
         case '/':
             e.preventDefault();
             searchInput.focus();
@@ -455,7 +471,7 @@ function handleSwipe() {
     
     if (modal.classList.contains('active')) return;
     
-    const views = ['grid', 'map', 'timeline', 'essay'];
+    const views = ['grid', 'map', 'timeline', 'essay', 'social-impact'];
     const currentIndex = views.indexOf(currentView);
     
     if (diff > 0 && currentIndex < views.length - 1) {
