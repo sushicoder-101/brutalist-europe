@@ -61,7 +61,8 @@ function switchView(viewName) {
     
     // Update views
     views.forEach(view => {
-        view.classList.toggle('active', view.id === viewName + 'View');
+        const expectedId = viewName === 'social-impact' ? 'socialImpactView' : viewName + 'View';
+        view.classList.toggle('active', view.id === expectedId);
     });
     
     // Render appropriate view
