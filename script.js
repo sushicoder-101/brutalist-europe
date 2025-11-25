@@ -133,27 +133,46 @@ function renderMapView() {
     if (!map) {
         initializeMap();
     }
-    
+
     // Clear existing markers
     map.eachLayer(layer => {
         if (layer.options && layer.options.isMarker) {
             map.removeLayer(layer);
         }
     });
-    
+
     // Add markers for current buildings
     currentBuildings.forEach(building => {
         const marker = L.marker(building.coordinates, { isMarker: true })
             .addTo(map)
             .bindPopup(`
                 <div class="popup-content">
-                    <h4>${building.name}</h4>
-                    <p><strong>${building.architect}</strong></p>
-                    <p>${building.year} • ${building.city}</p>
-                    <button onclick="openModalFromMap(${building.id})" class="popup-btn">View Details</button>
+                    <div class="popup-image-container">
+                        <img src="${building.image}" alt="${building.name}" class="popup-image" onerror="this.style.display='none'">
+                    </div>
+                    <div class="popup-year">${building.year}</div>
+                    <h4 class="popup-title">${building.name}</h4>
+                    <p class="popup-architect"><strong>${building.architect}</strong></p>
+                    <p class="popup-location">${building.city}, ${building.country}</p>
+                    <button onclick="openModalFromMap(${building.id})" class="popup-btn">VIEW DETAILS</button>
                 </div>
             `);
     });
+
+    // Auto-fit map bounds to show all markers
+    if (currentBuildings.length > 0) {
+        const bounds = calculateMapBounds(currentBuildings);
+        map.fitBounds(bounds, {
+            padding: [50, 50],
+            maxZoom: 12
+        });
+    }
+}
+
+// Calculate map bounds from building coordinates
+function calculateMapBounds(buildings) {
+    const coordinates = buildings.map(b => b.coordinates);
+    return L.latLngBounds(coordinates);
 }
 
 function initializeMap() {
