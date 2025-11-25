@@ -2,6 +2,7 @@
 let currentView = 'grid';
 let currentBuildings = [...brutalistBuildings];
 let map = null;
+let currentModalBuildingIndex = -1;
 
 // DOM elements
 const navBtns = document.querySelectorAll('.nav-btn');
@@ -45,8 +46,33 @@ function setupModalEvents() {
     modal.addEventListener('click', (e) => {
         if (e.target === modal) closeModal();
     });
+
+    // Navigation button event listeners
+    const modalPrev = document.getElementById('modalPrev');
+    const modalNext = document.getElementById('modalNext');
+
+    if (modalPrev) {
+        modalPrev.addEventListener('click', () => navigateModal(-1));
+    }
+
+    if (modalNext) {
+        modalNext.addEventListener('click', () => navigateModal(1));
+    }
+
+    // Keyboard shortcuts for modal
     document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape') closeModal();
+        // Only handle keys when modal is active
+        if (!modal.classList.contains('active')) return;
+
+        if (e.key === 'Escape') {
+            closeModal();
+        } else if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            navigateModal(-1);
+        } else if (e.key === 'ArrowRight') {
+            e.preventDefault();
+            navigateModal(1);
+        }
     });
 }
 
@@ -331,25 +357,82 @@ function createFallbackImage(buildingName) {
 
 // Modal functionality
 function openModal(building) {
-    modalBody.innerHTML = createModalContent(building);
+    // Find building index in current buildings array
+    currentModalBuildingIndex = currentBuildings.findIndex(b => b.id === building.id);
+
+    // Update modal content and navigation
+    updateModalContent(building);
+    updateModalNavigation();
+
     modal.classList.add('active');
     document.body.style.overflow = 'hidden';
-    
-    // Set up modal image loading
-    const modalImg = modalBody.querySelector('.modal-image');
-    const modalLoadingDiv = modalBody.querySelector('.modal-image-loading');
-    
-    if (modalImg && modalLoadingDiv) {
-        modalImg.addEventListener('load', () => {
-            modalLoadingDiv.style.display = 'none';
-            modalImg.style.opacity = '1';
-        });
-    }
 }
 
 function closeModal() {
     modal.classList.remove('active');
     document.body.style.overflow = 'auto';
+    currentModalBuildingIndex = -1;
+}
+
+function updateModalContent(building) {
+    // Add fade out effect
+    modalBody.style.opacity = '0';
+
+    setTimeout(() => {
+        modalBody.innerHTML = createModalContent(building);
+
+        // Set up modal image loading
+        const modalImg = modalBody.querySelector('.modal-image');
+        const modalLoadingDiv = modalBody.querySelector('.modal-image-loading');
+
+        if (modalImg && modalLoadingDiv) {
+            modalImg.addEventListener('load', () => {
+                modalLoadingDiv.style.display = 'none';
+                modalImg.style.opacity = '1';
+            });
+        }
+
+        // Fade in
+        modalBody.style.opacity = '1';
+    }, 150);
+}
+
+function updateModalNavigation() {
+    const modalPrev = document.getElementById('modalPrev');
+    const modalNext = document.getElementById('modalNext');
+    const modalPosition = document.getElementById('modalPosition');
+
+    if (!modalPrev || !modalNext || !modalPosition) return;
+
+    const total = currentBuildings.length;
+    const current = currentModalBuildingIndex + 1;
+
+    // Update position indicator
+    modalPosition.textContent = `${current} of ${total}`;
+
+    // Enable/disable buttons based on position
+    modalPrev.disabled = currentModalBuildingIndex === 0;
+    modalNext.disabled = currentModalBuildingIndex === total - 1;
+
+    // Update button styles for disabled state
+    modalPrev.style.opacity = currentModalBuildingIndex === 0 ? '0.4' : '1';
+    modalPrev.style.cursor = currentModalBuildingIndex === 0 ? 'not-allowed' : 'pointer';
+
+    modalNext.style.opacity = currentModalBuildingIndex === total - 1 ? '0.4' : '1';
+    modalNext.style.cursor = currentModalBuildingIndex === total - 1 ? 'not-allowed' : 'pointer';
+}
+
+function navigateModal(direction) {
+    const newIndex = currentModalBuildingIndex + direction;
+
+    // Validate bounds
+    if (newIndex < 0 || newIndex >= currentBuildings.length) return;
+
+    currentModalBuildingIndex = newIndex;
+    const building = currentBuildings[currentModalBuildingIndex];
+
+    updateModalContent(building);
+    updateModalNavigation();
 }
 
 function createModalContent(building) {
