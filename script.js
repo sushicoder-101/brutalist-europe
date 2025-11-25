@@ -4,8 +4,6 @@ let currentBuildings = [...brutalistBuildings];
 let map = null;
 let currentModalBuildingIndex = -1;
 let wikipediaCache = {};
-let currentGalleryIndex = 0;
-let currentGalleryImages = [];
 
 // DOM elements
 const navBtns = document.querySelectorAll('.nav-btn');
@@ -426,143 +424,6 @@ async function loadWikipediaContent(building) {
     } else {
         architectSection.innerHTML = '<p class="wiki-error">Architect information not available</p>';
     }
-
-    // Load photo gallery
-    loadPhotoGallery(building);
-}
-
-// Wikimedia Commons Photo Gallery integration
-async function fetchWikimediaImages(searchTerm) {
-    try {
-        const encodedTerm = encodeURIComponent(searchTerm);
-        const response = await fetch(
-            `https://commons.wikimedia.org/w/api.php?` +
-            `action=query&` +
-            `list=search&` +
-            `srsearch=${encodedTerm}&` +
-            `srnamespace=6&` +
-            `srlimit=10&` +
-            `format=json&` +
-            `origin=*`
-        );
-
-        if (!response.ok) return [];
-
-        const data = await response.json();
-        const searchResults = data.query?.search || [];
-
-        // Fetch image details for each result
-        const imagePromises = searchResults.slice(0, 6).map(async (result) => {
-            const title = result.title;
-            const imageInfoResponse = await fetch(
-                `https://commons.wikimedia.org/w/api.php?` +
-                `action=query&` +
-                `titles=${encodeURIComponent(title)}&` +
-                `prop=imageinfo&` +
-                `iiprop=url|extmetadata&` +
-                `iiurlwidth=800&` +
-                `format=json&` +
-                `origin=*`
-            );
-
-            const imageData = await imageInfoResponse.json();
-            const pages = imageData.query?.pages;
-            const page = pages ? Object.values(pages)[0] : null;
-            const imageInfo = page?.imageinfo?.[0];
-
-            if (imageInfo) {
-                return {
-                    url: imageInfo.thumburl || imageInfo.url,
-                    fullUrl: imageInfo.url,
-                    title: title.replace('File:', ''),
-                    artist: imageInfo.extmetadata?.Artist?.value || 'Unknown',
-                    credit: imageInfo.extmetadata?.Credit?.value || '',
-                    description: imageInfo.extmetadata?.ImageDescription?.value || ''
-                };
-            }
-            return null;
-        });
-
-        const images = await Promise.all(imagePromises);
-        return images.filter(img => img !== null);
-    } catch (error) {
-        console.error('Wikimedia Commons API error:', error);
-        return [];
-    }
-}
-
-async function loadPhotoGallery(building) {
-    const galleryContainer = document.getElementById('photoGallery');
-    if (!galleryContainer) return;
-
-    galleryContainer.innerHTML = '<div class="gallery-loading"><span class="loading-text">Loading photo gallery...</span></div>';
-
-    const images = await fetchWikimediaImages(building.name);
-    currentGalleryImages = images;
-    currentGalleryIndex = 0;
-
-    if (images.length > 0) {
-        renderPhotoGallery();
-    } else {
-        galleryContainer.innerHTML = '<p class="wiki-error">No additional photos available</p>';
-    }
-}
-
-function renderPhotoGallery() {
-    const galleryContainer = document.getElementById('photoGallery');
-    if (!galleryContainer || currentGalleryImages.length === 0) return;
-
-    const currentImage = currentGalleryImages[currentGalleryIndex];
-    const totalImages = currentGalleryImages.length;
-
-    galleryContainer.innerHTML = `
-        <div class="photo-gallery">
-            <div class="gallery-header">
-                <h3>Photo Gallery</h3>
-                <span class="gallery-counter">${currentGalleryIndex + 1} of ${totalImages}</span>
-            </div>
-            <div class="gallery-main">
-                <button class="gallery-nav gallery-prev" onclick="navigateGallery(-1)" ${currentGalleryIndex === 0 ? 'disabled' : ''}>
-                    ‹
-                </button>
-                <div class="gallery-image-container">
-                    <img src="${currentImage.url}" alt="${currentImage.title}" class="gallery-image" loading="lazy">
-                </div>
-                <button class="gallery-nav gallery-next" onclick="navigateGallery(1)" ${currentGalleryIndex === totalImages - 1 ? 'disabled' : ''}>
-                    ›
-                </button>
-            </div>
-            <div class="gallery-caption">
-                <p class="gallery-title">${currentImage.title}</p>
-                <p class="gallery-credit">Photo: ${stripHtmlTags(currentImage.artist)}</p>
-            </div>
-            <div class="gallery-thumbnails">
-                ${currentGalleryImages.map((img, index) => `
-                    <div class="gallery-thumb ${index === currentGalleryIndex ? 'active' : ''}"
-                         onclick="jumpToGalleryImage(${index})">
-                        <img src="${img.url}" alt="${img.title}">
-                    </div>
-                `).join('')}
-            </div>
-        </div>
-    `;
-}
-
-function stripHtmlTags(html) {
-    const tmp = document.createElement('div');
-    tmp.innerHTML = html;
-    return tmp.textContent || tmp.innerText || '';
-}
-
-window.navigateGallery = function(direction) {
-    currentGalleryIndex += direction;
-    currentGalleryIndex = Math.max(0, Math.min(currentGalleryIndex, currentGalleryImages.length - 1));
-    renderPhotoGallery();
-}
-
-window.jumpToGalleryImage = function(index) {
-    currentGalleryIndex = index;
-    renderPhotoGallery();
 }
 
 // Modal functionality
@@ -662,12 +523,6 @@ function createModalContent(building) {
         <div class="modal-section">
             <h3>Description</h3>
             <p>${building.description}</p>
-        </div>
-
-        <div class="modal-section" id="photoGallery">
-            <div class="gallery-loading">
-                <span class="loading-text">Loading photo gallery...</span>
-            </div>
         </div>
 
         <div class="modal-section" id="wikiContent">
