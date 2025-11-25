@@ -520,6 +520,23 @@ function createModalContent(building) {
             <strong>${building.architect}</strong> • ${building.year} • ${building.city}, ${building.country}
         </div>
 
+        <div class="street-view-section">
+            <div class="street-view-header">
+                <h3>Street View</h3>
+                <span class="street-view-subtitle">Explore the location virtually</span>
+            </div>
+            <div class="street-view-container">
+                <iframe
+                    class="street-view-frame"
+                    src="https://www.google.com/maps?q=${building.coordinates[0]},${building.coordinates[1]}&output=embed&z=18"
+                    loading="lazy"
+                    allowfullscreen
+                    referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
+            <p class="street-view-hint">Click the Street View icon (pegman) in the map to explore the building's surroundings</p>
+        </div>
+
         <div class="modal-section">
             <h3>Description</h3>
             <p>${building.description}</p>
