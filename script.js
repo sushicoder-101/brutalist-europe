@@ -3,6 +3,7 @@ let currentView = 'grid';
 let currentBuildings = [...brutalistBuildings];
 let map = null;
 let currentModalBuildingIndex = -1;
+let wikipediaCache = {};
 
 // DOM elements
 const navBtns = document.querySelectorAll('.nav-btn');
@@ -355,6 +356,76 @@ function createFallbackImage(buildingName) {
     return svg.replace(/\s+/g, ' ').trim();
 }
 
+// Wikipedia API integration
+async function fetchWikipediaSummary(title) {
+    // Check cache first
+    if (wikipediaCache[title]) {
+        return wikipediaCache[title];
+    }
+
+    try {
+        const encodedTitle = encodeURIComponent(title);
+        const response = await fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodedTitle}`);
+
+        if (!response.ok) {
+            return null;
+        }
+
+        const data = await response.json();
+        wikipediaCache[title] = data;
+        return data;
+    } catch (error) {
+        console.error('Wikipedia API error:', error);
+        return null;
+    }
+}
+
+async function loadWikipediaContent(building) {
+    const wikiSections = document.getElementById('wikiContent');
+    const architectSection = document.getElementById('architectInfo');
+
+    if (!wikiSections || !architectSection) return;
+
+    // Load building Wikipedia data
+    const buildingData = await fetchWikipediaSummary(building.name);
+    if (buildingData && buildingData.extract) {
+        wikiSections.innerHTML = `
+            <div class="wiki-section">
+                <h3>About This Building</h3>
+                <p>${buildingData.extract}</p>
+                <a href="${buildingData.content_urls.desktop.page}" target="_blank" class="wiki-link">
+                    Read more on Wikipedia →
+                </a>
+            </div>
+        `;
+    } else {
+        wikiSections.innerHTML = '<p class="wiki-error">Additional information not available</p>';
+    }
+
+    // Load architect Wikipedia data
+    const architectData = await fetchWikipediaSummary(building.architect);
+    if (architectData && architectData.extract) {
+        const architectImageHtml = architectData.thumbnail
+            ? `<img src="${architectData.thumbnail.source}" alt="${building.architect}" class="architect-image">`
+            : '';
+
+        architectSection.innerHTML = `
+            <div class="architect-bio">
+                ${architectImageHtml}
+                <div class="architect-text">
+                    <h3>About the Architect</h3>
+                    <p>${architectData.extract}</p>
+                    <a href="${architectData.content_urls.desktop.page}" target="_blank" class="wiki-link">
+                        More about ${building.architect} →
+                    </a>
+                </div>
+            </div>
+        `;
+    } else {
+        architectSection.innerHTML = '<p class="wiki-error">Architect information not available</p>';
+    }
+}
+
 // Modal functionality
 function openModal(building) {
     // Find building index in current buildings array
@@ -391,6 +462,9 @@ function updateModalContent(building) {
                 modalImg.style.opacity = '1';
             });
         }
+
+        // Load Wikipedia content asynchronously
+        loadWikipediaContent(building);
 
         // Fade in
         modalBody.style.opacity = '1';
@@ -445,22 +519,34 @@ function createModalContent(building) {
         <div class="modal-meta">
             <strong>${building.architect}</strong> • ${building.year} • ${building.city}, ${building.country}
         </div>
-        
+
         <div class="modal-section">
             <h3>Description</h3>
             <p>${building.description}</p>
         </div>
-        
+
+        <div class="modal-section" id="wikiContent">
+            <div class="wiki-loading">
+                <span class="loading-text">Loading Wikipedia content...</span>
+            </div>
+        </div>
+
         <div class="modal-section">
             <h3>Key Architectural Features</h3>
             <ul class="modal-features">
                 ${building.features.map(feature => `<li>${feature}</li>`).join('')}
             </ul>
         </div>
-        
+
         <div class="modal-section">
             <h3>Historical Significance</h3>
             <p>${building.significance}</p>
+        </div>
+
+        <div class="modal-section" id="architectInfo">
+            <div class="wiki-loading">
+                <span class="loading-text">Loading architect information...</span>
+            </div>
         </div>
     `;
 }
